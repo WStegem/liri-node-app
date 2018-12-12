@@ -7,7 +7,7 @@ var moment = require('moment');
 
 function concert(artist){
     console.log('Searching for concert:', artist+'\n')
-    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
+    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id="+keys.bands.id)
         .then(function(response){
             
             console.log('The next '+artist+' concert will be:\nVenue: '+response.data[0].venue.name+'\nLocation: '+response.data[0].venue.city+', '+response.data[0].venue.region+', '+response.data[0].venue.country+'\nDate: '+moment(response.data[0].datetime).format('L'))
