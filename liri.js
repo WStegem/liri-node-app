@@ -4,6 +4,11 @@ var file = 'random.txt'
 var keys = require('./keys')
 var axios = require('axios')
 var moment = require('moment');
+var Spotify = require('node-spotify-api')
+var spotify = new Spotify({
+    id: keys.spotify.id,
+    secret: keys.spotify.secret,
+  });
 
 function concert(artist){
     console.log('Searching for concert:', artist+'\n')
@@ -14,10 +19,48 @@ function concert(artist){
         })
 }
 function song(songName){
-    console.log('Searching for song:', songName)
+    console.log('Searching for song:', songName+'\n')
+
+    spotify.search({ type: 'track', query: songName }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+        var artistList =''
+        for(i=0;i<data.tracks.items[0].artists.length;i++){
+            if(i<data.tracks.items[0].artists[i].name-1){
+                artistList += data.tracks.items[0].artists[i].name+', '
+            }else if(i==data.tracks.items[0].artists.length-1){
+            artistList += data.tracks.items[0].artists[i].name
+            }
+        }
+        console.log('Artist: '+artistList+' \nSong: '+data.tracks.items[0].name+'\nAlbum: '+data.tracks.items[0].album.name+'\nPreview: '+data.tracks.items[0].preview_url)
+    })
 }
+
+    // var fetchTracks = function (albumId, callback) {
+    //     $.ajax({
+    //         url: 'https://api.spotify.com/v1/albums/' + albumId,
+    //         success: function (response) {
+    //             callback(response);
+    //         }
+    //     });
+    // };
+    
+    // var searchAlbums = function (query) {
+    //     $.ajax({
+    //         url: 'https://api.spotify.com/v1/search',
+    //         data: {
+    //             q: query,
+    //             type: 'album'
+    //         },
+    //         success: function (response) {
+    //             resultsPlaceholder.innerHTML = template(response);
+    //         }
+    //     });
+    // };
+
 function movie(movieName){
-    console.log('Searching for movie:', movieName)
+    console.log('Searching for movie:', movieName+'\n')
 }
 
 function rand(){
