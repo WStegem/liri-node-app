@@ -37,30 +37,13 @@ function song(songName){
     })
 }
 
-    // var fetchTracks = function (albumId, callback) {
-    //     $.ajax({
-    //         url: 'https://api.spotify.com/v1/albums/' + albumId,
-    //         success: function (response) {
-    //             callback(response);
-    //         }
-    //     });
-    // };
-    
-    // var searchAlbums = function (query) {
-    //     $.ajax({
-    //         url: 'https://api.spotify.com/v1/search',
-    //         data: {
-    //             q: query,
-    //             type: 'album'
-    //         },
-    //         success: function (response) {
-    //             resultsPlaceholder.innerHTML = template(response);
-    //         }
-    //     });
-    // };
-
 function movie(movieName){
     console.log('Searching for movie:', movieName+'\n')
+    axios.get("http://www.omdbapi.com/?s=" + movie + "/events?app_id="+keys.OM.id)
+        .then(function(response){
+            
+            console.log('The next '+artist+' concert will be:\nVenue: '+response.data[0].venue.name+'\nLocation: '+response.data[0].venue.city+', '+response.data[0].venue.region+', '+response.data[0].venue.country+'\nDate: '+moment(response.data[0].datetime).format('L'))
+        })
 }
 
 function rand(){
