@@ -38,12 +38,18 @@ function song(songName){
 }
 
 function movie(movieName){
-    console.log('Searching for movie:', movieName+'\n')
-    axios.get("http://www.omdbapi.com/?s=" + movie + "/events?app_id="+keys.OM.id)
-        .then(function(response){
-            
-            console.log('The next '+artist+' concert will be:\nVenue: '+response.data[0].venue.name+'\nLocation: '+response.data[0].venue.city+', '+response.data[0].venue.region+', '+response.data[0].venue.country+'\nDate: '+moment(response.data[0].datetime).format('L'))
-        })
+    console.log('Searching for movie:', movieName)
+    var ID
+    axios.get("http://www.omdbapi.com/?apikey=" + keys.omdb.id + "&s=" + movieName)
+    .then(function(response){
+        ID = response.data.Search[0].imdbID
+        axios.get("http://www.omdbapi.com/?apikey=" + keys.omdb.id + "&i=" + ID)
+            .then(function(response){
+                let imdb = response.data.Ratings.find(obj => obj.Source == 'Internet Movie Database')
+                let rotten = response.data.Ratings.find(obj => obj.Source == 'Rotten Tomatoes')
+                console.log('Movie name: '+response.data.Title+'\nReleased year: '+response.data.Year+'\nIMDB rating :'+imdb.Value+'\nRotten Tomatoes rating: '+rotten.Value+'\nCountry: '+response.data.Country+'\nLanguage: '+response.data.Language+'\nPlot: '+response.data.Plot+'\nActors: '+response.data.Actors)
+    }) })
+    console.log()
 }
 
 function rand(){
