@@ -14,8 +14,11 @@ function concert(artist){
     console.log('Searching for concert:', artist+'\n')
     axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id="+keys.bands.id)
         .then(function(response){
-            
-            console.log('The next '+artist+' concert will be:\nVenue: '+response.data[0].venue.name+'\nLocation: '+response.data[0].venue.city+', '+response.data[0].venue.region+', '+response.data[0].venue.country+'\nDate: '+moment(response.data[0].datetime).format('L'))
+            if(response.data[0]){
+                console.log('The next '+artist+' concert will be:\nVenue: '+response.data[0].venue.name+'\nLocation: '+response.data[0].venue.city+', '+response.data[0].venue.region+', '+response.data[0].venue.country+'\nDate: '+moment(response.data[0].datetime).format('L'))
+            }else{
+                console.log('No concerts found')
+            }
         })
 }
 function song(songName){
@@ -42,13 +45,18 @@ function movie(movieName){
     var ID
     axios.get("http://www.omdbapi.com/?apikey=" + keys.omdb.id + "&s=" + movieName)
     .then(function(response){
+        if(response.data.Response == 'True'){
         ID = response.data.Search[0].imdbID
         axios.get("http://www.omdbapi.com/?apikey=" + keys.omdb.id + "&i=" + ID)
             .then(function(response){
                 let imdb = response.data.Ratings.find(obj => obj.Source == 'Internet Movie Database')
                 let rotten = response.data.Ratings.find(obj => obj.Source == 'Rotten Tomatoes')
                 console.log('Movie name: '+response.data.Title+'\nReleased year: '+response.data.Year+'\nIMDB rating :'+imdb.Value+'\nRotten Tomatoes rating: '+rotten.Value+'\nCountry: '+response.data.Country+'\nLanguage: '+response.data.Language+'\nPlot: '+response.data.Plot+'\nActors: '+response.data.Actors)
-    }) })
+            })
+        }else{
+            console.log('Movie not found')
+        }
+    })
     console.log()
 }
 
@@ -76,7 +84,7 @@ if(process.argv[2] == 'concert-this'){
     song(process.argv[3])
 }else if(process.argv[2] == 'movie-this'){
     movie(process.argv[3])
-}else if(process.argv[2] == 'do-what-it-say'){
+}else if(process.argv[2] == 'do-what-it-says'){
     rand()
 }else{
     console.log('syntax error')
